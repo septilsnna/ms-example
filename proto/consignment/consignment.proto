@@ -4,6 +4,7 @@ package consignment;
 
 service ShippingServices {
     rpc CreateConsignment(Consignment) returns (Response) {}
+    rpc GetConsignments(GetRequest) returns (Response) {}
 }
 
 message Consignment {
@@ -26,3 +27,5 @@ message Response {
     bool created = 1;
     Consignment consignment = 2;
 }
+
+message GetRequest {}
