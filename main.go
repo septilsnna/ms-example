@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	// import the generated protobuf code
+
 	pb "github.com/septilsnna/ms-example/proto/consignment"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -18,6 +19,7 @@ const (
 
 type repository interface {
 	Create(*pb.Consignment) (*pb.Consignment, error)
+	GetAll() []*pb.Consignment
 }
 
 // Repository - Dummy repository, this simulates the use of a datastore of some kind.
@@ -34,6 +36,10 @@ func (repo *Repository) Create(consignment *pb.Consignment) (*pb.Consignment, er
 	repo.consignments = updated
 	repo.mu.Unlock()
 	return consignment, nil
+}
+
+func (repo *Repository) GetAll() []*pb.Consignment {
+	return repo.consignments
 }
 
 // Service should implement all of the methods to statisfy the service we defined in our
@@ -55,6 +61,11 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment) (*
 
 	// Return matching the 'Response' message we created in our protobuf definition
 	return &pb.Response{Created: true, Consignment: consignment}, nil
+}
+
+func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest) (*pb.Response, error) {
+	consignments := s.repo.GetAll()
+	return &pb.Response{Consignment: consignments}, nil
 }
 
 func main() {
