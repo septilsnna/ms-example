@@ -65,7 +65,7 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment) (*
 
 func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest) (*pb.Response, error) {
 	consignments := s.repo.GetAll()
-	return &pb.Response{Consignment: consignments}, nil
+	return &pb.Response{consignments: consignments}, nil
 }
 
 func main() {
